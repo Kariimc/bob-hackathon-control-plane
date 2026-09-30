@@ -1,8 +1,13 @@
 # Bob task evidence
 
-Save one screenshot of each completed IBM Bob task summary here. Use a generic
-filename such as `2026-10-02-task-01.png`.
+Every team member must save both forms of Bob evidence here for each completed
+task:
 
-Before committing a screenshot, confirm that it shows only this repository and
-contains no notifications, open tabs, identifying paths, or unrelated desktop
-content.
+- a task-summary screenshot, such as `2026-10-02-member-01-task-01.png`;
+- the exported task-history Markdown report, such as
+  `2026-10-02-member-01-task-01.md`.
+
+Before committing either file, open it and confirm it contains only this public
+repository. Remove notifications, unrelated tabs, identifying paths, account
+details, secrets, tokens, keys, environment values, and private prompt content.
+Then run `npm run scan`; the report is scanned like every other Markdown file.

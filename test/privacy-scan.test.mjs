@@ -84,6 +84,31 @@ test('privacy scan checks unreachable Git objects', async () => {
   }
 });
 
+test('privacy scan rejects a symbolic link retained in Git history', async () => {
+  const fixture = await mkdtemp(join(tmpdir(), 'bob-privacy-symlink-'));
+  try {
+    await git(fixture, ['init', '-q']);
+    await writeFile(join(fixture, 'safe.txt'), 'generic fixture\n');
+    await writeFile(join(fixture, 'link-target.txt'), 'safe.txt\n');
+    const blob = await git(fixture, ['hash-object', '-w', 'link-target.txt']);
+    await git(fixture, ['add', 'safe.txt']);
+    await git(fixture, [
+      'update-index', '--add', '--cacheinfo', `120000,${blob.stdout.trim()},linked.txt`,
+    ]);
+    await git(fixture, ['commit', '-qm', 'seed unsafe link']);
+    await git(fixture, ['update-index', '--force-remove', 'linked.txt']);
+    await git(fixture, ['commit', '-qm', 'remove link from working tree']);
+
+    await assert.rejects(
+      run(process.execPath, [scanner, '--root', fixture], { cwd: fixture }),
+      (error) => error.code === 1
+        && /history:.*linked\.txt:0 symbolic-link/.test(error.stderr),
+    );
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
+  }
+});
+
 test('privacy scan reads common source-code extensions', async () => {
   const fixture = await mkdtemp(join(tmpdir(), 'bob-privacy-extension-'));
   try {

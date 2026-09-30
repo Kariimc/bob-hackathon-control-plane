@@ -29,8 +29,8 @@ JavaScript, Node test runner, Git, and GitHub.
   contain one to five people and may submit one project.
 - Existing projects are allowed, but judging covers only meaningful work made
   during the build period and declared in the submission.
-- IBM Bob IDE is required. Bob task-summary screenshots are required in the
-  final repository.
+- IBM Bob IDE is required. Every team member must save Bob task-summary
+  screenshots and exported task-history Markdown reports in the final repository.
 
 ## Judging weights
 
@@ -44,13 +44,13 @@ JavaScript, Node test runner, Git, and GitHub.
 Only changes made in IBM Bob from September 28 through October 18, 2026 count
 as hackathon improvements. The initial baseline commit is not claimed as event
 work. Each improvement must have a later commit, test proof, and a Bob task
-summary screenshot.
+summary screenshot and exported task-history report.
 
 ## Improvement log
 
-| Date | Bob task | Improvement | Proof | Screenshot |
+| Date | Bob task | Improvement | Proof | Bob evidence |
 |---|---|---|---|---|
-| Pending | Pending | No hackathon improvement recorded yet | Pending | Pending |
+| Pending | Pending | No hackathon improvement recorded yet | Pending | Screenshot and exported report pending |
 
 Replace the pending row as work is completed. Do not count cosmetic wording,
 generated boilerplate, or changes made outside IBM Bob as event improvements.
@@ -66,7 +66,9 @@ generated boilerplate, or changes made outside IBM Bob as event improvements.
       judging criteria, key learnings, improvement opportunities, and roadmap.
 - [ ] Public YouTube demo is three minutes or less.
 - [ ] Live demo link is available.
-- [ ] Bob task-summary screenshots are saved in `bob_sessions/`.
+- [ ] Every team member's Bob task-summary screenshots are saved in `bob_sessions/`.
+- [ ] Every team member's exported Bob task-history `.md` reports are saved in
+      `bob_sessions/`.
 - [ ] `npm test` passes on the final commit.
 - [ ] `npm run scan` passes on the final commit.
 - [ ] Final repository reviewed before publication.
