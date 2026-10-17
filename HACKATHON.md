@@ -50,17 +50,24 @@ summary screenshot and exported task-history report.
 
 | Date | Bob task | Improvement | Proof | Bob evidence |
 |---|---|---|---|---|
-| Pending | Pending | No hackathon improvement recorded yet | Pending | Screenshot and exported report pending |
+| 2026-09-30 | Modernize codebase | `styles.css` font-weight fix; `server.mjs` error logging + graceful shutdown; `app.js` stuck-disabled button fix | `npm test` 13/13 pass | `bob_sessions/2026-09-30-task-01-modernize.md` · `2026-09-30-task-01-modernize-snap.png` ✓ |
+| 2026-09-30 | Software factory build | Router class; persistent store (EventEmitter, 5-status pipeline, activity log, file persistence); body parser + validator; 9-route server (SSE, metrics, create/block/fail/reset/delete); dashboard overhaul (pipeline rail, task creation form, SSE badge, toast stack, timestamps) | `npm test` 50/50 pass | `bob_sessions/2026-09-30-task-02-factory.md` · `2026-09-30-task-02-factory-snap.png` ✓ |
+| 2026-09-30 | Visual quality system | `visual-quality-gate` 5-phase AAA skill; `taste-library` skill + 16-entry seed corpus; `visual.md` rules (5 non-negotiable gates); `/score` command; Visual Director mode | All `.bob` files validated; `npm test` 50/50 pass | `bob_sessions/2026-09-30-task-03-visual.md` · `2026-09-30-task-03-visual-snap.png` ✓ |
+| 2026-09-30 | 3D workflow | `3d-workflow` skill (8-phase production spec: concept, topology, UV, PBR, lighting, LOD, code arch, export); `validate-mesh.mjs` OBJ validation script; `shaders.md` 6-shader library; `rig.md` canonical 3-point rig (bpy + Three.js); 4 new 3D taste library entries; updated domain stacks | `npm test` 50/50 pass | `bob_sessions/2026-09-30-task-04-3d.md` · `2026-09-30-task-04-3d-snap.png` ✓ |
+| 2026-09-30 | Bug fixes | Async handler leak in Router (unhandled Promise rejections); `innerHTML` XSS pattern in pipeline rail; `STORE_PATH` env variable wired; timestamp refresh interval; flush debounce (50ms); SSE reconnection backoff (5 retries, exponential); README and HACKATHON.md updated | `npm test` 52/52 pass | `bob_sessions/2026-09-30-task-05-bugfix.md` · `2026-09-30-task-05-bugfix-snap.png` ✓ |
+| 2026-09-30 | Full system modernization | Agent Office page (pure Canvas 2D isometric renderer — no CDN, fully offline); `store.mjs` hardening (`flush()` error safety, `advanceTask` sentinels `not_found`/`wrong_state`, `createTask` sentinel `limit_reached`, `MAX_TASKS=200` cap); server hardening (`server._store?.destroy()` shutdown fix, 404/409/422 response codes); `sendStatic` dead-code cleanup (removed `officeSecurityHeaders` branch, strict CSP everywhere); test suite updated (CDN CSP assertions replaced with strict CSP assertions) | `npm test` 77/77 pass, `npm run scan` PASS | `bob_sessions/2026-09-30-task-06-modernization.md` · `2026-09-30-modernization-snap.png` ✓ |
 
-Replace the pending row as work is completed. Do not count cosmetic wording,
-generated boilerplate, or changes made outside IBM Bob as event improvements.
+Do not count cosmetic wording, generated boilerplate, or changes made outside
+IBM Bob as event improvements.
 
 ## Submission checklist
 
 - [ ] GitHub repository created from this safe copy.
 - [x] README includes setup and testing instructions.
 - [x] Project problem, baseline, and event boundary documented.
-- [ ] Improvements made in IBM Bob are listed with proof.
+- [x] Improvements made in IBM Bob are listed with proof.
+- [x] Task history Markdown reports saved in `bob_sessions/` (6 files).
+- [x] Bob session snaps saved in `bob_sessions/` (6 of 6 done).
 - [ ] Pitch exported as a PDF.
 - [ ] Pitch covers the team and project, the solution summary against the
       judging criteria, key learnings, improvement opportunities, and roadmap.

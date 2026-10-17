@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agent Office — Control Plane</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: #7ecfcc;
+        color: #1a2438;
+        font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+        overflow: hidden;
+        height: 100dvh;
+        user-select: none;
+      }
+
+      #office-canvas {
+        display: block;
+        position: fixed;
+        inset: 0;
+        cursor: default;
+      }
+
+      /* ── Top bar ── */
+      .office-topbar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1.4rem;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.88) 60%, transparent);
+        backdrop-filter: blur(4px);
+        pointer-events: none;
+      }
+      .office-topbar > * { pointer-events: auto; }
+
+      .office-title { display: flex; flex-direction: column; gap: 0.1rem; }
+      .office-eyebrow {
+        font-size: 0.68rem; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase; color: #f47920;
+      }
+      .office-h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: #1a2438; }
+
+      .office-nav { display: flex; align-items: center; gap: 0.7rem; }
+
+      #office-stream {
+        font-size: 0.75rem; color: rgba(26,36,56,0.45);
+        transition: color 0.3s;
+      }
+      #office-stream.live    { color: #198038; }
+      #office-stream.error   { color: #da1e28; }
+
+      .back-link {
+        font-size: 0.82rem; color: rgba(26,36,56,0.6);
+        text-decoration: none; padding: 0.35rem 0.7rem;
+        border: 1px solid rgba(26,36,56,0.15);
+        border-radius: 0.5rem; background: rgba(255,255,255,0.55);
+        transition: color 0.15s, background 0.15s;
+      }
+      .back-link:hover { color: #1a2438; background: rgba(255,255,255,0.9); }
+
+      .sim-btn {
+        font-size: 0.78rem; font-weight: 700; cursor: pointer;
+        padding: 0.32rem 0.75rem; border-radius: 0.5rem;
+        border: 1px solid rgba(244,121,32,0.4);
+        background: rgba(244,121,32,0.12); color: #c95f10;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+      }
+      .sim-btn:hover  { background: rgba(244,121,32,0.22); color: #f47920; }
+      .sim-btn.active { background: #f47920; color: #fff; border-color: #f47920; }
+
+      /* ── Tooltip ── */
+      #agent-tooltip {
+        position: fixed; z-index: 20; pointer-events: none;
+        background: rgba(255,255,255,0.97);
+        border: 1px solid rgba(26,36,56,0.12);
+        border-radius: 0.8rem;
+        padding: 0.75rem 1rem;
+        min-width: 13rem;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+        opacity: 0; transition: opacity 0.15s;
+        transform: translate(-50%, calc(-100% - 14px));
+        color: #1a2438;
+      }
+      #agent-tooltip.visible { opacity: 1; }
+      .tt-title  { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; color: #1a2438; }
+      .tt-owner  { font-size: 0.75rem; color: rgba(26,36,56,0.5); margin-bottom: 0.4rem; }
+      .tt-status {
+        display: inline-block; padding: 0.18rem 0.55rem;
+        border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.06em;
+      }
+      .tt-reason { font-size: 0.75rem; color: #c95f10; margin-top: 0.35rem; }
+
+      /* ── Legend ── */
+      .legend {
+        position: fixed; bottom: 1.4rem; left: 1.4rem; z-index: 10;
+        display: flex; flex-direction: column; gap: 0.38rem;
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(26,36,56,0.1);
+        border-radius: 0.65rem;
+        padding: 0.55rem 0.75rem;
+      }
+      .legend-item {
+        display: flex; align-items: center; gap: 0.45rem;
+        font-size: 0.73rem; color: rgba(26,36,56,0.6);
+      }
+      .legend-dot {
+        width: 0.52rem; height: 0.52rem; border-radius: 50%; flex-shrink: 0;
+      }
+
+      /* ── Hint ── */
+      .hint {
+        position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 10;
+        font-size: 0.7rem; color: rgba(26,36,56,0.3);
+        text-align: right; line-height: 1.7;
+      }
+
+      /* ── Live Board overlay ── */
+      #live-board {
+        display: none;
+        position: fixed; inset: 0; z-index: 100;
+        background: rgba(4, 8, 20, 0.78);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        align-items: flex-start; justify-content: center;
+        padding: 2rem 1rem;
+        overflow-y: auto;
+      }
+      #live-board.open { display: flex; }
+
+      .lb-panel {
+        background: linear-gradient(145deg, #0d1526 0%, #111d38 60%, #0a1628 100%);
+        border: 1px solid rgba(140,184,255,0.18);
+        border-radius: 1.2rem;
+        width: 100%; max-width: 1100px;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(140,184,255,0.08);
+        overflow: hidden;
+      }
+
+      /* Header */
+      .lb-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.1rem 1.6rem 0.9rem;
+        border-bottom: 1px solid rgba(140,184,255,0.1);
+        background: rgba(10,22,40,0.6);
+      }
+      .lb-header-left { display: flex; align-items: center; gap: 0.8rem; }
+      .lb-eyebrow {
+        font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em;
+        text-transform: uppercase; color: #f47920;
+      }
+      .lb-title {
+        font-size: 1.15rem; font-weight: 700; color: #e8f0ff;
+        letter-spacing: -0.02em;
+      }
+      .lb-live-dot {
+        display: inline-flex; align-items: center; gap: 0.35rem;
+        font-size: 0.7rem; color: #42be65; font-weight: 700;
+      }
+      .lb-live-dot::before {
+        content: '';
+        display: inline-block; width: 7px; height: 7px;
+        border-radius: 50%; background: #42be65;
+        box-shadow: 0 0 0 3px rgba(66,190,101,0.25);
+        animation: lb-pulse 1.6s ease-in-out infinite;
+      }
+      @keyframes lb-pulse {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(66,190,101,0.25); }
+        50%       { box-shadow: 0 0 0 6px rgba(66,190,101,0.10); }
+      }
+      .lb-close {
+        background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.7); border-radius: 0.5rem;
+        padding: 0.35rem 0.8rem; font-size: 0.85rem; cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+      }
+      .lb-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+      /* Pipeline bar */
+      #lb-pipe {
+        display: flex; height: 36px; overflow: hidden;
+        margin: 1rem 1.6rem 0;
+        border-radius: 0.5rem; gap: 2px;
+      }
+      .lb-pipe-seg {
+        display: flex; align-items: center; justify-content: center;
+        min-width: 0; overflow: hidden;
+        font-size: 0.72rem; font-weight: 700; color: #0d1526;
+        transition: flex 0.4s ease;
+        border-radius: 4px;
+      }
+      .lb-pipe-seg span { white-space: nowrap; padding: 0 0.5rem; }
+
+      /* Metrics */
+      #lb-metrics {
+        display: flex; gap: 1rem; flex-wrap: wrap;
+        padding: 0.9rem 1.6rem;
+        border-bottom: 1px solid rgba(140,184,255,0.08);
+      }
+      .lb-metric {
+        flex: 1; min-width: 100px;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(140,184,255,0.1);
+        border-radius: 0.7rem; padding: 0.65rem 1rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      }
+      .lb-mval  { font-size: 1.55rem; font-weight: 800; color: #e8f0ff; }
+      .lb-mlabel { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+                   text-transform: uppercase; color: rgba(232,240,255,0.4); }
+
+      /* Task cards grid */
+      #lb-tasks {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.85rem;
+        padding: 1rem 1.6rem 1.6rem;
+      }
+      .lb-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(140,184,255,0.10);
+        border-left: 3px solid var(--accent, #8cb8ff);
+        border-radius: 0.75rem;
+        padding: 0.85rem 1rem;
+        display: flex; flex-direction: column; gap: 0.4rem;
+      }
+      .lb-card-header { display: flex; align-items: center; gap: 0.5rem; }
+      .lb-status-icon { font-size: 1.15rem; }
+      .lb-status-pill {
+        font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em;
+        text-transform: uppercase; border-radius: 999px; padding: 0.15rem 0.55rem;
+      }
+      .lb-card-title {
+        font-size: 0.88rem; font-weight: 600; color: #c8d8f0; line-height: 1.35;
+        margin: 0;
+      }
+      .lb-card-owner {
+        font-size: 0.72rem; color: rgba(200,216,240,0.45); margin: 0;
+      }
+      .lb-card-reason {
+        font-size: 0.72rem; color: #f1c21b; margin: 0;
+        padding: 0.2rem 0.5rem;
+        background: rgba(241,194,27,0.08); border-radius: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <canvas id="office-canvas"></canvas>
+
+    <header class="office-topbar">
+      <div class="office-title">
+        <p class="office-eyebrow">IBM Bob hackathon</p>
+        <h1 class="office-h1">Agent Office</h1>
+      </div>
+      <nav class="office-nav">
+        <span id="office-stream" aria-live="polite">⬤ Connecting</span>
+        <button id="sim-toggle" class="sim-btn" title="Toggle live simulation" aria-pressed="false">▶ Sim</button>
+        <a class="back-link" href="/">← Dashboard</a>
+      </nav>
+    </header>
+
+    <div id="agent-tooltip" role="tooltip" aria-live="polite">
+      <p class="tt-title"  id="tt-title"></p>
+      <p class="tt-owner"  id="tt-owner"></p>
+      <span class="tt-status" id="tt-status"></span>
+      <p class="tt-reason" id="tt-reason" hidden></p>
+    </div>
+
+    <aside class="legend" aria-label="Status colours">
+      <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(26,36,56,0.4);margin-bottom:0.2rem">Status</p>
+      <div class="legend-item"><span class="legend-dot" style="background:#8cb8ff"></span>Queued</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#42be65"></span>Running</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#f1c21b"></span>Blocked</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#24a148"></span>Done</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#fa4d56"></span>Failed</div>
+      <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(26,36,56,0.4);margin-top:0.45rem;margin-bottom:0.2rem">Agent / LLM</p>
+      <div class="legend-item"><span class="legend-dot" style="background:#1b2a4a"></span>Builder · Copilot</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#cc785c"></span>Reviewer · Claude</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#1a73e8"></span>Security · Gemini</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#10a37f"></span>Ops · ChatGPT</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#0f62fe"></span>Other · IBM Granite</div>
+    </aside>
+
+    <p class="hint">Hover agents for details<br>Drag to orbit · Scroll to zoom<br>Click Live Board to open</p>
+
+    <!-- Live Board fullscreen overlay -->
+    <div id="live-board" role="dialog" aria-modal="true" aria-labelledby="lb-title">
+      <div class="lb-panel">
+        <header class="lb-header">
+          <div class="lb-header-left">
+            <div>
+              <p class="lb-eyebrow">IBM Bob hackathon</p>
+              <h2 class="lb-title" id="lb-title">📊 Live Board</h2>
+            </div>
+            <span class="lb-live-dot">Live</span>
+          </div>
+          <button id="live-board-close" class="lb-close" aria-label="Close Live Board">✕ Close</button>
+        </header>
+        <div id="lb-pipe" aria-label="Pipeline status bar"></div>
+        <div id="lb-metrics" aria-label="Live metrics"></div>
+        <div id="lb-tasks" aria-label="Task cards"></div>
+      </div>
+    </div>
+
+    <script src="/three.min.js"></script>
+    <script type="module" src="/office.js"></script>
+  </body>
+</html>

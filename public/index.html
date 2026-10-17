@@ -12,20 +12,25 @@
     <div class="shell">
       <header class="topbar">
         <div>
-          <p class="eyebrow">IBM Bob hackathon baseline</p>
-          <h1>Local Control Plane</h1>
+          <p class="eyebrow">IBM Bob hackathon</p>
+          <h1>Control Plane</h1>
         </div>
-        <div class="local-badge"><span aria-hidden="true"></span> Local mock</div>
+        <div class="topbar-right">
+          <span id="stream-status" class="stream-badge" title="Live push connection status" aria-live="polite"></span>
+          <div class="local-badge"><span aria-hidden="true"></span> Local mock</div>
+          <a href="/office" class="office-link" aria-label="Open 3D Agent Office">🏢 Agent Office</a>
+        </div>
       </header>
 
       <main id="main">
-        <section class="hero" aria-labelledby="overview-title">
-          <div>
-            <p class="kicker">Private by construction</p>
-            <h2 id="overview-title">A calm view of work, health, and proof.</h2>
-            <p class="lede">Generic data only. No remote services. Nothing leaves this browser and local server.</p>
-          </div>
-          <button id="refresh" type="button">Refresh snapshot</button>
+        <!-- Metrics bar -->
+        <div id="metrics-bar" class="metrics-bar" aria-label="Live metrics"></div>
+
+        <!-- Pipeline progress rail -->
+        <section aria-labelledby="pipeline-title" class="pipeline-section">
+          <p class="eyebrow">Pipeline</p>
+          <h2 id="pipeline-title" class="sr-only">Pipeline progress</h2>
+          <div id="pipeline-rail" class="pipeline-rail" aria-live="polite"></div>
         </section>
 
         <section aria-labelledby="services-title">
@@ -44,9 +49,22 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">Workflow</p>
-                <h2 id="tasks-title">Mock tasks</h2>
+                <h2 id="tasks-title">Tasks</h2>
+              </div>
+              <div class="heading-actions">
+                <button id="refresh" type="button" class="btn-secondary btn-sm">↺ Refresh</button>
+                <button id="add-task-toggle" type="button" class="btn-secondary btn-sm">+ New task</button>
               </div>
             </div>
+
+            <!-- Inline task creation form -->
+            <form id="new-task-form" class="new-task-form" hidden aria-label="Create new task">
+              <input id="new-task-title" type="text" placeholder="Task title" required autocomplete="off" aria-label="Task title" maxlength="200">
+              <input id="new-task-owner" type="text" placeholder="Owner" required autocomplete="off" aria-label="Owner" maxlength="100">
+              <button type="submit">Create</button>
+              <button type="button" id="new-task-cancel" class="btn-secondary">Cancel</button>
+            </form>
+
             <div id="tasks" class="task-list" aria-live="polite"></div>
           </div>
 
@@ -56,10 +74,25 @@
             <ul id="activity" class="activity-list"></ul>
           </aside>
         </section>
-
-        <p id="notice" class="notice" role="status" aria-live="polite"></p>
       </main>
     </div>
+
+    <!-- Reason dialog (block / fail) -->
+    <dialog id="reason-dialog" aria-labelledby="reason-dialog-title">
+      <form method="dialog" id="reason-form">
+        <h2 id="reason-dialog-title">Add a reason</h2>
+        <p id="reason-dialog-desc" class="dialog-desc"></p>
+        <textarea id="reason-input" rows="3" maxlength="500" placeholder="Optional reason…" aria-label="Reason"></textarea>
+        <div class="dialog-actions">
+          <button type="submit" id="reason-confirm">Confirm</button>
+          <button type="button" id="reason-cancel" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Toast / notice stack -->
+    <div id="notices" class="notices" role="status" aria-live="polite" aria-atomic="false"></div>
+
     <script type="module" src="/app.js"></script>
   </body>
 </html>
