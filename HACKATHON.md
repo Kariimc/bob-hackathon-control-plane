@@ -60,6 +60,19 @@ summary screenshot and exported task-history report.
 Do not count cosmetic wording, generated boilerplate, or changes made outside
 IBM Bob as event improvements.
 
+## Final implementation clarification — 2026-10-17
+
+The task-06 report above records the earlier Canvas 2D office. The final office
+uses locally bundled Three.js r128 and WebGL. The project owner confirmed on
+2026-10-17 that the final Three.js changes were made in IBM Bob during the event.
+This is an owner confirmation, not an additional exported Bob task history;
+the original six reports and screenshots are preserved unchanged.
+
+The server still uses only the Node.js standard library. No package installation
+is required, but the client includes a third-party library. Its license is in
+`THIRD_PARTY_NOTICES.md`. Submission wording and media were corrected outside
+Bob and are not claimed as additional Bob implementation work.
+
 ## Submission checklist
 
 - [ ] GitHub repository created from this safe copy.

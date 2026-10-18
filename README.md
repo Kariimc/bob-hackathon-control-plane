@@ -2,7 +2,9 @@
 
 A public-safe, loopback-only control-plane dashboard built with IBM Bob.
 Runs entirely on the local machine, uses generic mock data, makes no outbound
-calls, and has no third-party dependencies.
+calls, and needs no package installation. The server uses the Node.js standard
+library; the Agent Office bundles Three.js r128 locally under its MIT license
+(see `THIRD_PARTY_NOTICES.md`).
 
 ## What is included
 
