@@ -75,7 +75,7 @@ Bob and are not claimed as additional Bob implementation work.
 
 ## Submission checklist
 
-- [x] GitHub repository created from this safe copy (public visibility awaits identity verification).
+- [x] Public GitHub repository created from this safe copy: https://github.com/Kariimc/bob-hackathon-control-plane
 - [x] README includes setup and testing instructions.
 - [x] Project problem, baseline, and event boundary documented.
 - [x] Improvements made in IBM Bob are listed with proof.
@@ -85,7 +85,7 @@ Bob and are not claimed as additional Bob implementation work.
 - [x] Pitch covers the team and project, the solution summary against the
       judging criteria, key learnings, improvement opportunities, and roadmap.
 - [x] Public YouTube demo is three minutes or less: https://youtu.be/O1k5Kl_h0aE (110.3 seconds; YouTube displays 1:51).
-- [ ] Live demo link is available.
+- [x] Browser demo verified: https://stackblitz.com/github/Kariimc/bob-hackathon-control-plane?startScript=start
 - [ ] Every team member's Bob task-summary screenshots are saved in `bob_sessions/`.
 - [ ] Every team member's exported Bob task-history `.md` reports are saved in
       `bob_sessions/`.
@@ -102,6 +102,11 @@ Bob and are not claimed as additional Bob implementation work.
 5. Show the live demo and close with the measured result.
 
 The owner explicitly approved public GitHub publication, public YouTube upload,
-and AngelHack submission on 2026-10-17. The video is published; repository public
-visibility awaits GitHub identity verification. The live demo and final event
-submission remain pending. The event form draft and PDF upload are saved.
+and AngelHack submission on 2026-10-17. The repository and video are Public.
+The browser demo runs the unchanged Node application inside a WebContainer;
+open its preview in a new tab and choose Connect to Project if prompted.
+Task creation, live advancement, and the Three.js office were verified.
+
+AngelHack confirmed **Submitted** for The Naturals, Theme 2: Experienced
+Developers — Modernize What Matters, on October 17, 2026 at 20:59 ET.
+Receipt: https://hackathon.angelhack.com/web/events/building-with-ibm-bob?tab=team
