@@ -12,14 +12,14 @@ hackathon feature work. The initial commit records that pre-existing baseline.
 **Hackathon goal:** Use IBM Bob to add clearly measured improvements without
 turning private workstation state into submission data.
 
-**Project description (47 words; limit 100):** Bob Hackathon Control Plane is a
+**Project description (limit 100 words):** Bob Hackathon Control Plane is a
 privacy-first local dashboard for developer work, service health, and test
 evidence. The clean-room baseline uses only generic in-memory data and no remote
-services. During the event, IBM Bob will modernize this baseline through
+services. During the event, IBM Bob modernized this baseline through
 measured features, tests, documentation, and reviewable task evidence.
 
 **Technology:** IBM Bob IDE, Node.js 22 standard library, vanilla HTML, CSS and
-JavaScript, Node test runner, Git, and GitHub.
+JavaScript, locally bundled Three.js r128/WebGL, Node test runner, Git, and GitHub.
 
 ## Current event facts
 
@@ -75,23 +75,23 @@ Bob and are not claimed as additional Bob implementation work.
 
 ## Submission checklist
 
-- [ ] GitHub repository created from this safe copy.
+- [x] GitHub repository created from this safe copy (public visibility awaits identity verification).
 - [x] README includes setup and testing instructions.
 - [x] Project problem, baseline, and event boundary documented.
 - [x] Improvements made in IBM Bob are listed with proof.
 - [x] Task history Markdown reports saved in `bob_sessions/` (6 files).
 - [x] Bob session snaps saved in `bob_sessions/` (6 of 6 done).
-- [ ] Pitch exported as a PDF.
-- [ ] Pitch covers the team and project, the solution summary against the
+- [x] Pitch exported as `pitch.pdf`.
+- [x] Pitch covers the team and project, the solution summary against the
       judging criteria, key learnings, improvement opportunities, and roadmap.
-- [ ] Public YouTube demo is three minutes or less.
+- [x] Public YouTube demo is three minutes or less: https://youtu.be/O1k5Kl_h0aE (110.3 seconds; YouTube displays 1:51).
 - [ ] Live demo link is available.
 - [ ] Every team member's Bob task-summary screenshots are saved in `bob_sessions/`.
 - [ ] Every team member's exported Bob task-history `.md` reports are saved in
       `bob_sessions/`.
 - [ ] `npm test` passes on the final commit.
 - [ ] `npm run scan` passes on the final commit.
-- [ ] Final repository reviewed before publication.
+- [x] Final repository reviewed before publication; corrections passed independent review.
 
 ## Demo outline
 
@@ -101,6 +101,7 @@ Bob and are not claimed as additional Bob implementation work.
 4. Run the tests and privacy scan.
 5. Show the live demo and close with the measured result.
 
-Keep the recorded demo at or under three minutes. The pitch PDF, YouTube upload,
-live-demo publication, and public repository are outside the baseline and remain
-pending until explicitly approved.
+The owner explicitly approved public GitHub publication, public YouTube upload,
+and AngelHack submission on 2026-10-17. The video is published; repository public
+visibility awaits GitHub identity verification. The live demo and final event
+submission remain pending. The event form draft and PDF upload are saved.

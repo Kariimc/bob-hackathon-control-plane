@@ -15,7 +15,7 @@ library; the Agent Office bundles Three.js r128 locally under its MIT license
 - A loopback-only JSON API with 9 routes covering task lifecycle, SSE push, and
   operational metrics.
 - An in-memory task store with optional file persistence across restarts.
-- Server-Sent Events push — the dashboard and office both update without polling.
+- Server-Sent Events push task changes to the dashboard and office; metrics refresh every ten seconds.
 - Node.js tests (77) covering all routes, store behaviour, router, and validation.
 - A deterministic repository privacy scan.
 - Submission tracking for the IBM Bob event.
